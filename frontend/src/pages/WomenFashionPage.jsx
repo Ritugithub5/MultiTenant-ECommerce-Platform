@@ -113,11 +113,11 @@ const WomenFashionPage = () => {
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-slate-900 font-sans">
       {/* Editorial Hero Header */}
-      <section className="relative py-20 lg:py-28 bg-[#FAF7F2] text-slate-900 overflow-hidden">
-        <div className="container mx-auto px-8 max-w-7xl">
+      <section className="relative py-10 lg:py-14 bg-[#FAF7F2] text-slate-900 overflow-hidden">
+        <div className="container mx-auto px-8 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 space-y-8 text-left">
-              <h1 className="text-6xl sm:text-7xl xl:text-8xl font-extralight tracking-normal leading-none text-slate-900">
+              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extralight tracking-normal leading-none text-slate-900">
                 Elegance <br />
                 <span className="font-serif italic font-normal text-amber-800 block mt-2">
                   Redefined
@@ -138,7 +138,7 @@ const WomenFashionPage = () => {
             </div>
 
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-[380px] aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border border-stone-200">
+              <div className="relative w-full max-w-[300px] aspect-[4/5] rounded-2xl overflow-hidden shadow-xl border border-stone-200">
                 <img
                   src={pic6}
                   alt="Elegance Redefined"

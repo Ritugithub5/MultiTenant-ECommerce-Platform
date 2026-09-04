@@ -1,22 +1,48 @@
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const connectDB = require('./config/db')
+// backend/server.js
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
 
-const app = express()
-app.use(cors())
-app.use(express.json())
+// Import routes
+const authRoutes = require('./routes/auth');
+const productRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
+const orderRoutes = require('./routes/orders');
 
-// Connect DB
-connectDB()
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Connect Database
+connectDB();
 
 // Routes
-app.use('/api/auth', require('./routes/auth'))
-app.use('/api/products', require('./routes/products'))
-app.use('/api/stores', require('./routes/stores'))
-app.use('/api/orders', require('./routes/orders'))
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
-app.get('/', (req, res) => res.send({ ok: true, msg: 'Multitenant backend running' }))
+// Health check
+app.get('/', (req, res) => {
+  res.json({ 
+    ok: true, 
+    msg: 'Multitenant backend running',
+    timestamp: new Date().toISOString()
+  });
+});
 
-const PORT = process.env.PORT || 4000
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('❌ Server error:', err);
+  res.status(500).json({ msg: 'Server error', error: err.message });
+});
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📍 http://localhost:${PORT}`);
+});
