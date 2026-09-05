@@ -165,12 +165,6 @@ const HeroSection = () => {
                 >
                   Browse Marketplace
                 </Link>
-                <Link
-                  to="/register"
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-amber-100/50 hover:bg-amber-100 text-amber-900 font-medium text-sm tracking-wide border border-amber-200/80 backdrop-blur-md transition-all duration-300"
-                >
-                  Join as Vendor
-                </Link>
               </div>
             </div>
 
