@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import client from "../api/apiClient";
 
 // Local Fashion Image Imports
 import pic6 from "../image/pic6.png";
@@ -10,18 +9,10 @@ import dressImg from "../image/dress.png";
 import topImg from "../image/top.png";
 
 const WomenFashionPage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const localImages = {
-    'featured-dress-01': dressImg,
-    'featured-top-02': topImg,
-    'featured-trouser-03': trouserImg,
-    'featured-anarkali-04': anarkaliImg,
-  };
-
-  const localShowcase = [
+  // ONLY these 4 products - NO API call
+  const products = [
     {
       _id: "featured-dress-01",
       name: "Off-Shoulder Silk Evening Gown",
@@ -60,39 +51,6 @@ const WomenFashionPage = () => {
     },
   ];
 
-  useEffect(() => {
-    const fetchWomenProducts = async () => {
-      try {
-        setLoading(true);
-        const res = await client.get("/products");
-        const womenProducts = res.data.filter(
-          (product) =>
-            product.category?.toLowerCase() === "dresses" ||
-            product.category?.toLowerCase() === "tops" ||
-            product.category?.toLowerCase() === "trousers" ||
-            product.category?.toLowerCase() === "ethnic"
-        );
-
-        if (womenProducts.length > 0) {
-          const mappedProducts = womenProducts.map(product => ({
-            ...product,
-            image: localImages[product._id] || product.image
-          }));
-          setProducts(mappedProducts);
-        } else {
-          setProducts(localShowcase);
-        }
-      } catch (error) {
-        console.error("Error fetching women products:", error);
-        setProducts(localShowcase);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWomenProducts();
-  }, []);
-
   const categories = ["All", "Dresses", "Tops", "Trousers", "Ethnic"];
 
   const filteredProducts =
@@ -102,13 +60,6 @@ const WomenFashionPage = () => {
           (item) =>
             item.category?.toLowerCase() === selectedCategory.toLowerCase(),
         );
-
-  const getProductImage = (product) => {
-    if (product._id && localImages[product._id]) {
-      return localImages[product._id];
-    }
-    return product.image || dressImg;
-  };
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-slate-900 font-sans">
@@ -171,21 +122,10 @@ const WomenFashionPage = () => {
 
       {/* Product Grid Area */}
       <main className="container mx-auto px-6 max-w-7xl py-16">
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="animate-pulse flex flex-col space-y-4">
-                <div className="bg-slate-200 h-96 rounded-xl" />
-                <div className="h-4 bg-slate-200 rounded w-2/3" />
-                <div className="h-4 bg-slate-200 rounded w-1/3" />
-              </div>
-            ))}
-          </div>
-        ) : filteredProducts.length > 0 ? (
+        {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product) => {
               const productId = product._id || product.id;
-              const imageSrc = getProductImage(product);
 
               return (
                 <div
@@ -194,7 +134,7 @@ const WomenFashionPage = () => {
                 >
                   <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
                     <img
-                      src={imageSrc}
+                      src={product.image}
                       alt={product.name}
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                       onError={(e) => {
@@ -241,7 +181,7 @@ const WomenFashionPage = () => {
                         to={`/product/${productId}`}
                         className="text-sm font-medium text-slate-900 hover:text-amber-800 transition-colors"
                       >
-                        ${product.price ? product.price : "250"}
+                        ${product.price}
                       </Link>
                       <Link
                         to={`/product/${productId}`}
